@@ -1,0 +1,577 @@
+#:import StiffScrollEffect kivymd.stiffscroll.StiffScrollEffect
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:kivy 2.0.0
+#:import Clipboard kivy.core.clipboard.Clipboard
+
+<CheckOneLine@MDBoxLayout>:
+    size_hint: 1, None
+    height: test.height
+    text: 'Empty text'
+    padding: 0,0,10,0
+    active: False
+    func_active:
+    secondary_text: 'Empty secondary text'
+    MDBoxLayout:
+        OneLineListItem:
+            id: test
+            text: root.text
+            secondary_text: root.secondary_text
+            divider: None
+        MDCheckbox:
+            active: root.active
+            group: 'group'
+            size_hint: None, None
+            size: dp(48), dp(48)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_active: root.func_active
+
+
+<NumLes@MDLabel>:
+    color: 0.5,0.5,0.5,1
+
+<Time@MDLabel>:
+    color: 0,0,0,1
+
+<NameLes@MDLabel>:
+    color: 0,0,0,1
+
+<Cabinet@MDLabel>:
+    color: 0.5,0.5,0.5,1
+
+<LessonCard>:
+    size_hint: 1, None
+    height: dp(200)
+    count: 0
+    time: "XX:XX-XX:XX"
+    name_les: "Empty name_les"
+    cabinet: "XXX"
+    MDCard:
+        border_radius: dp(20)
+        radius: [dp(15)]
+        elevation: 0
+        orientation: 'vertical'
+        padding: "20dp"
+        size_hint: 0.9,0.9
+        pos_hint: {'center_x': 0.5, 'center_y':0.5}
+        size: "280dp", "180dp"
+        MDBoxLayout:
+            NumLes:
+                text: str(root.count) + " пара"
+                font_style: 'Body2'
+                color: [1,1,1,1] if app.theme_cls.theme_style == 'Dark' else [0,0,0,1]
+            Time:
+                halign: 'right'
+                text: app.fixtime(root.time)
+                font_style: "Body2"
+                color: [1,1,1,1] if app.theme_cls.theme_style == 'Dark' else [0,0,0,1]
+        NameLes:
+            text: root.name_les
+            font_style: 'H6'
+            color: [1,1,1,1] if app.theme_cls.theme_style == 'Dark' else [0,0,0,1]
+        Cabinet:
+            text: root.cabinet + " каб." if app.itsint(root.cabinet) else root.cabinet
+            font_style: 'Caption'
+            color: [1,1,1,1] if app.theme_cls.theme_style == 'Dark' else [0,0,0,1]
+
+<Tab>:
+
+<NotActualSnackBar@Snackbar>:
+    snackbar_x: "10dp"
+    snackbar_y: "60dp"
+    size_hint_x: (Window.width - (dp(10) * 2)) / Window.width
+
+<MultilineLabel@Label>:
+    text_size: self.width, None
+    height: self.texture_size[1]
+
+<FullLessonScreen@Screen>:
+    BoxLayout:
+        id: fls_main_box
+        orientation: 'vertical'
+        canvas.before:
+            Color:
+                rgb: 1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        BoxLayout:
+            id: fls_numtime_box
+            size_hint: 1,0.3
+            canvas.before:
+                Color:
+                    rgb: 0, 0.6, 0.6
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Button:
+                text: "<"
+                size_hint: None, None
+                height: fls_numtime_box.height
+                width: self.height
+            Label:
+                text: 'N Пара'
+            Label:
+                text: 'XX:XX-XX:XX'
+        Label:
+            color: 0,0,0,1
+            text: 'Empty_lessonname'
+        Label:
+            color: 0,0,0,1
+            text: 'Empty_cabinet'
+        Label:
+            color: 0,0,0,1
+            text: 'Empty_teacher'
+
+<NewsContent>:
+    name: "news"
+    text: "Новости"
+    icon: "newspaper"
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDToolbar:
+            title: 'Новости'
+            md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
+        MDLabel:
+            text: "Вкладка новостей пока не сделана! Ждите обновлений!"
+            halign: 'center'
+
+<TimetableContent>:
+    name: "timetable"
+    text: "Расписание"
+    icon: "timetable"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDToolbar:
+            title: 'Расписание'
+            md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
+            elevation: 0
+        WeekdaysTab:
+            id: wt
+            tab_indicator_anim: True
+            tab_hint_x: True
+            on_tab_switch: app.change_data(*args)
+            text_color_normal: 0.8,0.8,0.8,1
+            text_color_active: app.theme_cls.primary_color
+            indicator_color: app.theme_cls.primary_color
+            background_color: app.theme_cls.bg_light
+            elevation: 0
+            Tab:
+                id: пн
+                title: 'пн'
+            Tab:
+                id: вт
+                title: 'вт'
+            Tab:
+                id: ср
+                title: 'ср'
+            Tab:
+                id: чт
+                title: 'чт'
+            Tab:
+                id: пт
+                title: 'пт'
+
+<LessonsScroll>:
+
+
+<BackButton@MDIconButton>:
+    icon: 'arrow-left'
+
+<ThemeChanger@MDBoxLayout>:
+    orientation: 'vertical'
+    size_hint: 1, None
+    size: dp(42), dp(140)
+    light_theme: True if app.theme_cls.theme_style == 'Light' else False
+    RelativeLayout:
+        size_hint: 1, None
+        size: dp(42), dp(42)
+        MDLabel:
+            pos: 15, 0
+            text: 'ТЕМА'
+            font_style: 'Body2'
+            font_size: '14dp'
+            size_hint: 1, None
+            size: dp(32), dp(32)
+            color: 0.5,0.5,0.5,1
+    MDBoxLayout:
+        size_hint: 1, None
+        height: light_lineitem.height
+        padding: 0,0,10,0
+        MDBoxLayout:
+            OneLineListItem:
+                id: light_lineitem
+                text: 'Светлая'
+                divider: None
+            MDCheckbox:
+                active: root.light_theme
+                group: 'group'
+                size_hint: None, None
+                size: dp(48), dp(48)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                unselected_color: app.theme_cls.primary_color # Костыль непонятно почему работающий
+                on_press: app.change_theme('Light')
+    MDBoxLayout:
+        size_hint: 1, None
+        height: dark_lineitem.height
+        padding: 0,0,10,0
+        MDBoxLayout:
+            OneLineListItem:
+                id: dark_lineitem
+                text: 'Тёмная'
+                divider: None
+            MDCheckbox:
+                active: not root.light_theme
+                group: 'group'
+                size_hint: None, None
+                size: dp(48), dp(48)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                on_press: app.change_theme('Dark')
+
+<FpsshowSwitcher@MDBoxLayout>:
+    orientation: 'vertical'
+    size_hint: 1, None
+    size: dp(42), dp(110)
+    status: app.config.getint('app', 'fps')
+    RelativeLayout:
+        size_hint: 1, None
+        size: dp(42), dp(42)
+        MDLabel:
+            pos: 15, 0
+            text: 'FPS'
+            font_style: 'Body2'
+            font_size: '14dp'
+            size_hint: 1, None
+            size: dp(32), dp(32)
+            color: 0.5,0.5,0.5,1
+    MDBoxLayout:
+        size_hint: 1, None
+        height: light_lineitem.height
+        padding: 0,0,10,0
+        FloatLayout:
+            TwoLineListItem:
+                id: light_lineitem
+                pos_hint: {'x': 0, 'y': 0}
+                text: 'Счетчик кадров'
+                secondary_text: '(требуется перезапуск)'
+                divider: None
+            MDSwitch:
+                active: root.status
+                fixed_x: 1 - (self.width + 20) / root.width
+                pos_hint: {'x': self.fixed_x, 'y': 0}
+                on_active: app.switch_fpsshow()
+
+
+<SettingsContent>:
+    name: "settings"
+    text: "Настройки"
+    font_style: 'Button'
+    icon: "cog"
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDToolbar:
+            id: settings_tb
+            title: "Настройки"
+            md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
+        ScreenManager:
+            id: settings_sm
+            MDScreen:
+                name: 'main'
+                id: settings_main
+                on_enter:
+                    settings_sm.transition.direction = 'left'
+                on_leave:
+                    settings_sm.transition.direction = 'right'
+                ScrollView:
+                    effect_cls: StiffScrollEffect
+                    MDList:
+                        spacing: dp(15)
+                        OneLineIconListItem:
+                            text: 'Уведомления'
+                            size_hint: 1,None
+                            divider: None
+                            on_release:
+                                settings_sm.current = 'notification'
+                            IconLeftWidget:
+                                opposite_colors: True
+                                specific_text_color: app.theme_cls.primary_color
+                                text_color: self.specific_text_color
+                                theme_text_color: "Custom"
+                                icon: 'bell'
+                        OneLineIconListItem:
+                            text: 'Интерфейс'
+                            size_hint: 1,None
+                            divider: None
+                            on_release:
+                                settings_sm.current = 'interface'
+                            IconLeftWidget:
+                                opposite_colors: True
+                                specific_text_color: app.theme_cls.primary_color
+                                text_color: self.specific_text_color
+                                theme_text_color: "Custom"
+                                icon: 'cellphone-cog'
+                        OneLineIconListItem:
+                            text: 'Приложение'
+                            size_hint: 1,None
+                            divider: None
+                            on_release:
+                                settings_sm.current = 'app'
+                            IconLeftWidget:
+                                opposite_colors: True
+                                specific_text_color: app.theme_cls.primary_color
+                                text_color: self.specific_text_color
+                                theme_text_color: "Custom"
+                                icon: 'application-cog'
+                        OneLineIconListItem:
+                            text: 'O приложении'
+                            size_hint: 1,None
+                            divider: None
+                            on_release:
+                                settings_sm.current = 'about'
+                            IconLeftWidget:
+                                opposite_colors: True
+                                specific_text_color: app.theme_cls.primary_color
+                                text_color: self.specific_text_color
+                                theme_text_color: "Custom"
+                                icon: 'information'
+                        OneLineIconListItem:
+                            text: 'Тестовые функции'
+                            size_hint: 1,None
+                            divider: None
+                            on_release:
+                                settings_sm.current = 'bug'
+                            IconLeftWidget:
+                                opposite_colors: True
+                                specific_text_color: app.theme_cls.error_color
+                                text_color: self.specific_text_color
+                                theme_text_color: "Custom"
+                                icon: 'bug'
+
+            MDScreen:
+                name: 'notification'
+                on_pre_enter:
+                    settings_tb.title = 'Уведомления'
+                    app.add_backbutton()
+                id: settings_notification
+                MDLabel:
+                    text: 'Тут пока пусто :('
+                    halign: 'center'
+
+            MDScreen:
+                name: 'interface'
+                on_pre_enter:
+                    settings_tb.title = 'Интерфейс'
+                    app.add_backbutton()
+                id: settings_interface
+                MDLabel:
+                    text: 'Тут пока пусто :('
+                    halign: 'center'
+
+
+            MDScreen:
+                name: 'app'
+                on_pre_enter:
+                    settings_tb.title = 'Приложение'
+                    app.add_backbutton()
+                id: settings_app
+                ScrollView:
+                    effect_cls: StiffScrollEffect
+                    MDGridLayout:
+                        adaptive_height: True
+                        cols: 1
+                        OneLineIconListItem:
+                            text: 'Id: ' + app.get_uuid()
+                            IconLeftWidget:
+                                icon: 'cellphone-information'
+                                on_release:
+                                    Clipboard.copy(app.get_uuid())
+                                    app.show_toast("Id скопирован в буфер обмена!")
+                        OneLineIconListItem:
+                            text: 'Группа: ' + app.college_group
+                            IconLeftWidget:
+                                icon: 'account-group'
+
+            MDScreen:
+                name: 'about'
+                on_pre_enter:
+                    settings_tb.title = 'О приложении'
+                    app.add_backbutton()
+                id: settings_about
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    MDBoxLayout:
+                        padding: '10dp'
+                        orientation: 'vertical'
+                        Image:
+                            id: app_image
+                            size_hint: 1,1
+                            source: 'assets/icon.png'
+                        MDLabel:
+                            size_hint: 1,0.2
+                            text: 'Разработчик - adunyt'
+                            halign: 'center'
+                        MDLabel:
+                            size_hint: 1,0.2
+                            text: 'Версия приложения: ' + app.version
+                            halign: 'center'
+                            font_style: "Caption"
+
+                    ScrollView:
+                        effect_cls: StiffScrollEffect
+                        MDGridLayout:
+                            adaptive_height: True
+                            cols: 1
+                            OneLineIconListItem:
+                                text: 'Открыть страницу на GitHub'
+                                on_release: app.open_link('https://github.com/adunyt/')
+                                IconLeftWidget:
+                                    icon: 'github'
+                            OneLineIconListItem:
+                                text: 'Поддержать развитие проекта'
+                                on_release: app.open_link('https://sobe.ru/na/dev_adunyt')
+                                IconLeftWidget:
+                                    icon: 'currency-rub'
+            MDScreen:
+                name: 'bug'
+                on_pre_enter:
+                    settings_tb.title = 'Тестовые функции'
+                    app.add_backbutton()
+                id: settings_interface
+                ScrollView:
+                    effect_cls: StiffScrollEffect
+                    MDGridLayout:
+                        adaptive_height: True
+                        cols: 1
+                        ThemeChanger:
+                        FpsshowSwitcher:
+
+<WelcomeScreen@MDScreen>:
+    name: 'welcome_screen'
+    md_bg_color: app.theme_cls.primary_color
+    MDLabel:
+        id: welcome_text
+        text: 'Добро пожаловать!'
+        font_size: '48dp'
+        theme_text_color: 'Custom'
+        halign: 'center'
+        color: 1,1,1,1
+
+<Tips1@MDScreen>:
+    name: 'tips1'
+    md_bg_color: app.theme_cls.primary_color
+    MDBoxLayout:
+        padding: '10dp'
+        orientation: 'vertical'
+        Image:
+            source: 'assets/tips1.gif'
+            size: self.texture_size
+            anim_delay: 1/30
+        MDLabel:
+            size_hint: 1,0.6
+            text: 'Смотрите расписание прямо в приложении, не заходя на сайт!'
+            theme_text_color: 'Custom'
+            font_size: '24dp'
+            halign: 'center'
+            color: 1,1,1,1
+
+
+<Tips2@MDScreen>:
+    name: 'tips2'
+    md_bg_color: app.theme_cls.primary_color
+    MDBoxLayout:
+        padding: '10dp'
+        orientation: 'vertical'
+        Image:
+            source: 'assets/tips2.gif'
+            size: self.texture_size
+            anim_delay: 1/30
+        MDLabel:
+            size_hint: 1,0.6
+            text: 'Проверяйте новости колледжа!'
+            theme_text_color: 'Custom'
+            font_size: '24dp'
+            halign: 'center'
+            color: 1,1,1,1
+
+<Tips3@MDScreen>:
+    name: 'tips3'
+    md_bg_color: app.theme_cls.primary_color
+    MDBoxLayout:
+        padding: '10dp'
+        orientation: 'vertical'
+        Image:
+            source: 'assets/tips3.gif'
+            size: self.texture_size
+            anim_delay: 1/30
+        MDLabel:
+            size_hint: 1,0.6
+            text: 'Следите за своим местом в рейтинге и получайте уведомлении о изменении места в нем!'
+            theme_text_color: 'Custom'
+            font_size: '24dp'
+            halign: 'center'
+            color: 1,1,1,1
+
+
+<SkipTipsButton@MDFlatButton>:
+    font_size: '18dp'
+    text: 'Пропустить'
+    pos_hint: {"x": 0, 'y': 0.5}
+    text_color: 1,1,1,1
+    theme_text_color: "Custom"
+
+<BackTipsButton@MDIconButton>:
+    icon: 'arrow-left'
+    pos_hint: {"x": 0, 'y': 0.5}
+    opposite_colors: True
+    text_color: 1,1,1,1
+    user_font_size: "36dp"
+    theme_text_color: "Custom"
+
+
+<Start@ScreenManager>:
+    transition: FadeTransition()
+    WelcomeScreen:
+        id: welcome_screen
+    Screen:
+        name: 'tips'
+        MDBoxLayout:
+            orientation: "vertical"
+            ScreenManager:
+                id: sm_tips
+                Tips1:
+                    on_pre_enter:
+                        self.manager.transition.direction = 'left'
+                        app.change_nav_tips_button(args)
+                    on_pre_leave:
+                        app.change_nav_tips_button(args)
+                Tips2:
+
+                Tips3:
+                    on_pre_enter:
+                        self.manager.transition.direction = 'left'
+                    on_enter:
+                        self.manager.transition.direction = 'left'
+            MDFloatLayout:
+                id: tips_buttons
+                md_bg_color: app.theme_cls.primary_color
+                size_hint: 1,0.1
+                SkipTipsButton:
+                    on_release: sm_tips.current = 'tips1'
+                MDIconButton:
+                    icon: 'arrow-right'
+                    test: self.width / root.width
+                    pos_hint: {"x": 1 - self.test, 'y': 0.5}
+                    opposite_colors: True
+                    text_color: 1,1,1,1
+                    user_font_size: "36dp"
+                    theme_text_color: "Custom"
+                    on_release: sm_tips.current = sm_tips.next()
+
+
+NavBar:
+    id: navbar
+    TimetableContent:
+        id: timetable
+#    NewsContent:
+    SettingsContent:
+        id: settings
