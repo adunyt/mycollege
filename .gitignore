@@ -7,3 +7,4 @@
 /buildozer*
 /.buildozer/
 /krstc.ini
+/config
