@@ -1,0 +1,9 @@
+# Project exclude paths
+/venv/
+/bin/
+/res/
+/dfs.json
+/test.py
+/buildozer*
+/.buildozer/
+/krstc.ini
