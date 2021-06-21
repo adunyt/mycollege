@@ -5,7 +5,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
-from kivy.utils import platform
+from kivy.utils import platform, get_hex_from_color
 from kivy.animation import Animation, AnimationTransition
 from kivy.clock import Clock
 from kivy.metrics import dp
@@ -260,10 +260,6 @@ class KRSTCApp(MDApp):
             self.icon = 'assets/rounded_icon.png'
             self.window_icon = 'assets/rounded_icon.png'
             self.title = 'Мой колледж'
-        if platform == 'android':
-            import jnius
-            statusbar_color("#1668D6", 'white')
-            navbar_color("#D8D8D8")
 
     def build_config(self, config):
         config.adddefaultsection('general')
@@ -287,6 +283,18 @@ class KRSTCApp(MDApp):
         self.theme_cls.theme_style = theme
         if fps:
             self.fps_monitor_start()
+
+        # if platform == 'android':
+        if platform == 'android':
+            # import jnius
+            if self.theme_cls.theme_style == "Dark":
+                statusbar_hex = get_hex_from_color(self.theme_cls.bg_normal)
+                navbar_hex = get_hex_from_color(self.theme_cls.bg_light)
+            else:
+                statusbar_hex = get_hex_from_color(self.theme_cls.primary_dark)
+                navbar_hex = get_hex_from_color(self.theme_cls.bg_dark)
+            statusbar_color(statusbar_hex[:7], 'white')
+            navbar_color(navbar_hex[:7])
 
         from kivy.base import EventLoop
         EventLoop.window.bind(on_keyboard=self.hook_keyboard)
