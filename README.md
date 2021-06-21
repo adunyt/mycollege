@@ -17,8 +17,8 @@
 ## Скриншоты
 <img src="screenshots/1.jpg">
 <img src="screenshots/2.jpg">
-<img src="screenshots/3.png">
-<img src="screenshots/4.png">
+<img src="screenshots/3.jpg">
+<img src="screenshots/4.jpg">
 
 ## Описание
 Приложение "Мой Колледж" позволяет смотреть расписание Красногорского колледжа без скачивания каких либо файлов или дополнительных приложений!
