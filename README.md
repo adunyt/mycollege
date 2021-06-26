@@ -1,4 +1,4 @@
-<div style="text-align: center;"><img src="assets/rounded_icon.png" width="512"></div>
+<div style="text-align: center;"><img src="assets/rounded_icon.png" width="256"></div>
 <div style="text-align: center;"><h2>Мой колледж</h2></div>
 <h4 align="center">Приложение позволяющее смотреть расписание Красногорского колледжа без лишней мороки</h4>
 <hr>
