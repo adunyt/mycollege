@@ -138,7 +138,7 @@ class BackTipsButton(MDIconButton):
     pass
 
 
-class KRSTCApp(MDApp):
+class MyCollegeApp(MDApp):
     dialog = None
     window_icon: str
     version = __version__
@@ -545,5 +545,5 @@ if __name__ == '__main__':
     Config.set('graphics', 'minimum_width', 350)
     Config.set('graphics', 'minimum_height', 300)
     Config.set('graphics', 'max_fps', 300)
-    app = KRSTCApp()
+    app = MyCollegeApp()
     app.run()
