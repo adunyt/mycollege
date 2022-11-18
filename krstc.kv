@@ -1,4 +1,4 @@
-#:import StiffScrollEffect kivymd.stiffscroll.StiffScrollEffect
+#:import StiffScrollEffect kivymd.effects.stiffscroll.stiffscroll.StiffScrollEffect
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
 #:kivy 2.0.0
 #:import Clipboard kivy.core.clipboard.Clipboard
@@ -129,7 +129,7 @@
 
     MDBoxLayout:
         orientation: 'vertical'
-        MDToolbar:
+        MDTopAppBar:
             title: 'Новости'
             md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
         MDLabel:
@@ -142,7 +142,7 @@
     icon: "timetable"
     MDBoxLayout:
         orientation: 'vertical'
-        MDToolbar:
+        MDTopAppBar:
             title: 'Расписание'
             md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
             elevation: 0
@@ -269,7 +269,7 @@
     icon: "cog"
     MDBoxLayout:
         orientation: 'vertical'
-        MDToolbar:
+        MDTopAppBar:
             id: settings_tb
             title: "Настройки"
             md_bg_color: app.theme_cls.bg_light if app.theme_cls.theme_style == 'Dark' else app.theme_cls.primary_color
