@@ -40,7 +40,7 @@ locale.setlocale(
     category=locale.LC_ALL,
     locale=""
 )
-__version__ = '0.0.7'
+__version__ = '0.0.8'
 ip = '3.123.232.228'
 port = '8000'
 REGISTRATION_URL = f"http://{ip}:{port}/api/register"
