@@ -191,10 +191,10 @@ class KRSTCApp(MDApp):
         value = [r / 255, g / 255, b / 255, a]
         return value
 
-    @staticmethod # TODO: remove
+    @staticmethod  # TODO: remove and rewrite: see 392 line
     def get_file_time():
         file_path = 'dfs.json'
-        raw_time = getmtime(file_path)
+        raw_time = getmtime(file_path)  # TODO: add check for non-existing file
         normal_time = time.strftime("%d %B %H:%M", time.gmtime(raw_time))
         return normal_time
 
@@ -349,11 +349,11 @@ class KRSTCApp(MDApp):
         anim.start(text)
         Clock.schedule_once(lambda dt: self.test_df(), 1.2)
 
-    def test_df(self):
+    def test_df(self):  # TODO: what is it
         sm = self.root
         sm.current = 'tips'
 
-    def registration(self): # TODO: remove
+    def registration(self):  # TODO: remove
         uuid = self.get_uuid()
         body = {'id': uuid, 'group': self.college_group, 'app_ver': __version__}
         UrlRequest(url=REGISTRATION_URL,
@@ -534,11 +534,11 @@ class KRSTCApp(MDApp):
             current_tab.remove_widget(current_tab.children[0])
         current_tab.add_widget(tab_data)
 
-    def add_backbutton(self, *args):
+    def add_backbutton(self, *args):  # TODO: why is it a function???
         settings_tb = self.root.ids['settings'].ids['settings_tb']
         settings_tb.left_action_items = [['arrow-left', self.back_to_start]]
 
-    def back_to_start(self, *args):
+    def back_to_start(self, *args):  # TODO: why is it a function???
         settings_sm = self.root.ids['settings'].ids['settings_sm']
         settings_tb = self.root.ids['settings'].ids['settings_tb']
         settings_sm.current = 'main'
