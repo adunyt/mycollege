@@ -30,7 +30,6 @@ try:
     from os.path import getmtime, isfile
     import datetime
     import time
-    import webbrowser
     import locale
 except (ImportError, NameError) as e:
     raise e
@@ -156,10 +155,6 @@ class KRSTCApp(MDApp):
                        'news': False,
                        'settings': False}
     current_event = None
-
-    @staticmethod # TODO: remove
-    def open_link(link):
-        webbrowser.open(link)
 
     @staticmethod
     def show_toast(text):

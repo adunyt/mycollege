@@ -1,5 +1,6 @@
 #:import StiffScrollEffect kivymd.effects.stiffscroll.stiffscroll.StiffScrollEffect
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import webbrowser webbrowser
 #:kivy 2.0.0
 #:import Clipboard kivy.core.clipboard.Clipboard
 
@@ -423,12 +424,12 @@
                             cols: 1
                             OneLineIconListItem:
                                 text: 'Открыть страницу на GitHub'
-                                on_release: app.open_link('https://github.com/adunyt/')
+                                on_release: webbrowser.open('https://github.com/adunyt/')
                                 IconLeftWidget:
                                     icon: 'github'
                             OneLineIconListItem:
                                 text: 'Поддержать развитие проекта'
-                                on_release: app.open_link('https://sobe.ru/na/dev_adunyt')
+                                on_release: webbrowser.open('https://sobe.ru/na/dev_adunyt')
                                 IconLeftWidget:
                                     icon: 'currency-rub'
             MDScreen:
