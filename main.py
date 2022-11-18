@@ -25,7 +25,6 @@ try:
     if platform == 'android':
         from kvdroid import navbar_color, statusbar_color
         from kvdroid import toast as native_toast
-        from kvdroid.darkmode import dark_mode
     from logging import info, warning, critical, error, basicConfig, debug, DEBUG
     from json import dumps, loads
     from os.path import getmtime, isfile
@@ -158,7 +157,7 @@ class KRSTCApp(MDApp):
                        'settings': False}
     current_event = None
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def open_link(link):
         webbrowser.open(link)
 
@@ -169,7 +168,7 @@ class KRSTCApp(MDApp):
         else:
             toast(text)
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def itsint(pos_int: str):
         try:
             int(pos_int)
@@ -181,25 +180,25 @@ class KRSTCApp(MDApp):
         else:
             return True
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def fixtime(lesson_time):
         lesson_time: str
         new_time = lesson_time.replace('\n', '')
         return new_time
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def parse_rgb(r, g, b, a):
         value = [r / 255, g / 255, b / 255, a]
         return value
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def get_file_time():
         file_path = 'dfs.json'
         raw_time = getmtime(file_path)
         normal_time = time.strftime("%d %B %H:%M", time.gmtime(raw_time))
         return normal_time
 
-    @staticmethod
+    @staticmethod # TODO: remove
     def empty_dfs():
         with open('dfs.json') as f:
             data = f.read()
@@ -208,7 +207,7 @@ class KRSTCApp(MDApp):
             else:
                 return False
 
-    def get_uuid(self):
+    def get_uuid(self): # TODO: remove
         uuid = self.config.get('general', 'id')
         return uuid
 
@@ -354,7 +353,7 @@ class KRSTCApp(MDApp):
         sm = self.root
         sm.current = 'tips'
 
-    def registration(self):
+    def registration(self): # TODO: remove
         uuid = self.get_uuid()
         body = {'id': uuid, 'group': self.college_group, 'app_ver': __version__}
         UrlRequest(url=REGISTRATION_URL,
@@ -366,6 +365,7 @@ class KRSTCApp(MDApp):
                    on_failure=print,
                    on_error=print)
 
+    # Меняет отображаемую дату в приложении
     def change_data(self, tabs, tab, tab_label, str_label):
         self.selected_day = str_label
         timetable = self.root.ids['timetable']
@@ -384,12 +384,12 @@ class KRSTCApp(MDApp):
                 critical(f'ошибка {e}')
                 snackbar.open()
 
-    def check_request(self):
-        if not isfile('dfs.json'):
+    def check_request(self): # TODO: remove
+        if not isfile('dfs.json'): # TODO: rewrite
             self.get_dataframe()
             return
         uuid = self.get_uuid()
-        mod_time = getmtime('dfs.json')
+        mod_time = getmtime('dfs.json') # TODO: change. It's not always work, because file can be changed manually
         data = {'id': str(uuid), 'time': mod_time}
         body = dumps(data)
         wt = self.root.ids['timetable'].ids['wt']
@@ -399,9 +399,12 @@ class KRSTCApp(MDApp):
             if not isinstance(current_tab.children[0], FloatLayout):
                 return  # тестовая функция
         current_tab = self.root.ids['timetable'].ids[self.selected_day]
+
+        #TODO: separate
         spiner = FloatLayout()
         spiner.add_widget(MDSpinner(pos_hint={'center_x': 0.5, 'center_y': 0.5}, size_hint=[None, None]))
         current_tab.add_widget(spiner)
+
         UrlRequest(url=CHECK_URL,
                    method='GET',
                    req_headers={'Content-type': 'application/json'},
@@ -411,7 +414,7 @@ class KRSTCApp(MDApp):
                    on_error=self.load_and_show,
                    on_failure=self.actuality_check)
 
-    def actuality_check(self, req, res):
+    def actuality_check(self, req, res):  # TODO: remove
         if res != {}:
             actual = res['result']
         else:
@@ -427,7 +430,7 @@ class KRSTCApp(MDApp):
                 critical(f'ошибка {e}')
                 snackbar.open()
 
-    def get_dataframe(self):
+    def get_dataframe(self):  # TODO: remove
         uuid = self.get_uuid()
         data = {'id': str(uuid)}
         body = dumps(data)
@@ -456,9 +459,9 @@ class KRSTCApp(MDApp):
             jsn_text = jsn.read()
             self.save_in_var(loads(jsn_text))
 
-    def save_and_show(self, req, res, *args):
+    def save_and_show(self, req, res, *args): # TODO: remove
         jsn_text = dumps(res)
-        if req.resp_status == 200:
+        if req.resp_status == 200: # TODO: remove
             with open('dfs.json', 'w') as jsn:
                 jsn.write(jsn_text)
                 jsn.close()
@@ -475,7 +478,7 @@ class KRSTCApp(MDApp):
             critical(f'HTTP код: {req.resp_status}')
             snackbar.open()
 
-    def save_in_var(self, jsn):
+    def save_in_var(self, jsn):  # TODO: remove
         timetable = self.root.ids['timetable']
         timetable.df = loads(jsn)
         self.show_timetable()
@@ -495,6 +498,7 @@ class KRSTCApp(MDApp):
             if lesson['lessons'] is None:
                 empty_lessons += 1
                 if empty_lessons == len(day_timetable):
+                    # TODO: write default values into class
                     lesson_widget = LessonCard()
                     lesson_widget.id = f'lesson{1}'
                     lesson_widget.count = '0'
