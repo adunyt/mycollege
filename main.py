@@ -1,25 +1,25 @@
+from kivy.animation import Animation
+from kivy.clock import Clock
 from kivy.config import Config
 from kivy.effects.scroll import ScrollEffect
+from kivy.metrics import dp
 from kivy.network.urlrequest import UrlRequest
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform, get_hex_from_color
-from kivy.animation import Animation
-from kivy.clock import Clock
-from kivy.metrics import dp
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem, MDBottomNavigation
+from kivymd.uix.button import MDIconButton, MDFlatButton
 from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.gridlayout import MDGridLayout
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.spinner import MDSpinner
 from kivymd.uix.tab import MDTabsBase, MDTabs
-from kivymd.uix.button import MDIconButton, MDFlatButton
-from kivymd.uix.dialog import MDDialog
 
 if platform == 'android':
     from kvdroid.tools import navbar_color, change_statusbar_color
@@ -159,7 +159,7 @@ class MyCollegeApp(MDApp):
             toast(text)
 
     @staticmethod  # TODO: remove
-    def itsint(pos_int: str):
+    def is_int(pos_int: str):
         try:
             int(pos_int)
         except ValueError:
@@ -171,7 +171,7 @@ class MyCollegeApp(MDApp):
             return True
 
     @staticmethod  # TODO: remove
-    def fixtime(lesson_time):
+    def fix_time(lesson_time):
         lesson_time: str
         new_time = lesson_time.replace('\n', '')
         return new_time
@@ -208,7 +208,7 @@ class MyCollegeApp(MDApp):
         wt = self.root.ids['timetable'].ids['wt']
         wt.text_color_normal = [0.8, 0.8, 0.8, 1]
 
-    def switch_fpsshow(self):
+    def switch_fps_visibility(self):
         pre_value = self.config.getint('app', 'fps')
         self.config.set('app', 'fps', int(not pre_value))
         self.config.write()
@@ -236,14 +236,6 @@ class MyCollegeApp(MDApp):
     def close_app(self):
         self.stop()
 
-    # def prevent_switch(self, *args):
-    #     if len(args) < 3:
-    #         self.touched_navtabs[args[0].name] = True
-    #         event = Clock.schedule_once(lambda dt: args[0].parent_widget.switch_tab(args[0].name))
-    #         self.current_event = event
-    #     else:
-    #         self.current_event.cancel()
-
     def build(self):
         if platform != 'android' and platform != 'ios':
             self.icon = 'assets/rounded_icon.png'
@@ -259,9 +251,6 @@ class MyCollegeApp(MDApp):
         config.adddefaultsection('app')
         config.setdefault('app', 'fps', 0)
 
-    # def on_start(self):
-    #     Clock.schedule_once(lambda dt: self.welcome_text_animation(), 3)
-
     def on_start(self):
         config = self.config
         theme = config.get('interface', 'theme')
@@ -274,9 +263,7 @@ class MyCollegeApp(MDApp):
         if fps:
             self.fps_monitor_start()
 
-        # if platform == 'android':
         if platform == 'android':
-            # import jnius
             if self.theme_cls.theme_style == "Dark":
                 statusbar_hex = get_hex_from_color(self.theme_cls.bg_normal)
                 navbar_hex = get_hex_from_color(self.theme_cls.bg_light)
@@ -521,7 +508,7 @@ class MyCollegeApp(MDApp):
             current_tab.remove_widget(current_tab.children[0])
         current_tab.add_widget(tab_data)
 
-    def add_backbutton(self):  # TODO: why is it a function???
+    def add_back_button(self):  # TODO: why is it a function???
         settings_tb = self.root.ids['settings'].ids['settings_tb']
         settings_tb.left_action_items = [['arrow-left', lambda x: self.back_to_start()]]
 
