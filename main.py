@@ -253,12 +253,8 @@ class MyCollegeApp(MDApp):
 
     def on_start(self):
         config = self.config
-        theme = config.get('interface', 'theme')
+        theme = config.get('interface', 'theme').capitalize()
         fps = config.getint('app', 'fps')
-        if theme == 'light' or theme == 'dark':
-            theme = theme.capitalize()
-            config.set('interface', 'theme', theme)
-            config.write()
         self.theme_cls.theme_style = theme
         if fps:
             self.fps_monitor_start()
