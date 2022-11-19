@@ -392,9 +392,9 @@ class MyCollegeApp(MDApp):
         current_tab = self.root.ids['timetable'].ids[self.selected_day]
 
         # TODO: separate
-        spiner = FloatLayout()
-        spiner.add_widget(MDSpinner(pos_hint={'center_x': 0.5, 'center_y': 0.5}, size_hint=[None, None]))
-        current_tab.add_widget(spiner)
+        spinner = FloatLayout()
+        spinner.add_widget(MDSpinner(pos_hint={'center_x': 0.5, 'center_y': 0.5}, size_hint=[None, None]))
+        current_tab.add_widget(spinner)
 
         UrlRequest(url=CHECK_URL,
                    method='GET',
