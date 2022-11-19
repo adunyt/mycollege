@@ -523,7 +523,7 @@ class MyCollegeApp(MDApp):
 
     def add_backbutton(self):  # TODO: why is it a function???
         settings_tb = self.root.ids['settings'].ids['settings_tb']
-        settings_tb.left_action_items = [['arrow-left', self.back_to_start]]
+        settings_tb.left_action_items = [['arrow-left', lambda x: self.back_to_start()]]
 
     def back_to_start(self):  # TODO: why is it a function???
         settings_sm = self.root.ids['settings'].ids['settings_sm']
