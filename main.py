@@ -6,7 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.utils import platform, get_hex_from_color
-from kivy.animation import Animation, AnimationTransition
+from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.metrics import dp
 from kivymd.app import MDApp
@@ -21,20 +21,15 @@ from kivymd.uix.tab import MDTabsBase, MDTabs
 from kivymd.uix.button import MDIconButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
 
-try:
-    if platform == 'android':
-        from kvdroid import navbar_color, statusbar_color
-        from kvdroid import toast as native_toast
-    from logging import info, warning, critical, error, basicConfig, debug, DEBUG
-    from json import dumps, loads
-    from os.path import getmtime, isfile
-    import datetime
-    import time
-    import locale
-except (ImportError, NameError) as e:
-    raise e
-else:
-    import_error = None
+if platform == 'android':
+    from kvdroid import navbar_color, statusbar_color
+    from kvdroid import toast as native_toast
+from logging import critical
+from json import dumps, loads
+from os.path import getmtime, isfile
+import datetime
+import time
+import locale
 
 locale.setlocale(
     category=locale.LC_ALL,
@@ -147,7 +142,7 @@ class MyCollegeApp(MDApp):
     rus_days = {1: 'пн', 2: 'вт', 3: 'ср', 4: 'чт', 5: 'пт'}
     rus_weekdays = {'пн': 1, 'вт': 2, 'ср': 3, 'чт': 4, 'пт': 5}
     weekday = datetime.datetime.now().isoweekday()
-    college_group = '12ИС-20К'
+    college_group = '12ИС-20К'  # TODO: remove hardcode
     if weekday > 5:
         weekday = 1
     selected_day = rus_days[weekday]
@@ -163,7 +158,7 @@ class MyCollegeApp(MDApp):
         else:
             toast(text)
 
-    @staticmethod # TODO: remove
+    @staticmethod  # TODO: remove
     def itsint(pos_int: str):
         try:
             int(pos_int)
@@ -175,13 +170,13 @@ class MyCollegeApp(MDApp):
         else:
             return True
 
-    @staticmethod # TODO: remove
+    @staticmethod  # TODO: remove
     def fixtime(lesson_time):
         lesson_time: str
         new_time = lesson_time.replace('\n', '')
         return new_time
 
-    @staticmethod # TODO: remove
+    @staticmethod  # TODO: remove
     def parse_rgb(r, g, b, a):
         value = [r / 255, g / 255, b / 255, a]
         return value
@@ -193,7 +188,7 @@ class MyCollegeApp(MDApp):
         normal_time = time.strftime("%d %B %H:%M", time.gmtime(raw_time))
         return normal_time
 
-    @staticmethod # TODO: remove
+    @staticmethod  # TODO: remove
     def empty_dfs():
         with open('dfs.json') as f:
             data = f.read()
@@ -202,7 +197,7 @@ class MyCollegeApp(MDApp):
             else:
                 return False
 
-    def get_uuid(self): # TODO: remove
+    def get_uuid(self):  # TODO: remove
         uuid = self.config.get('general', 'id')
         return uuid
 
@@ -211,7 +206,7 @@ class MyCollegeApp(MDApp):
         self.config.set('interface', 'theme', theme)
         self.config.write()
         wt = self.root.ids['timetable'].ids['wt']
-        wt.text_color_normal = [0.8,0.8,0.8,1]
+        wt.text_color_normal = [0.8, 0.8, 0.8, 1]
 
     def switch_fpsshow(self):
         pre_value = self.config.getint('app', 'fps')
@@ -234,11 +229,11 @@ class MyCollegeApp(MDApp):
             test2 = SkipTipsButton(on_realise=lambda x: sm.switch_to('tips1'))
             buttons.add_widget(test2)
 
-    def dismiss_dialog(self, *args):
+    def dismiss_dialog(self):
         if self.dialog:
             self.dialog.dismiss()
 
-    def close_app(self, *args):
+    def close_app(self):
         self.stop()
 
     # def prevent_switch(self, *args):
@@ -259,7 +254,8 @@ class MyCollegeApp(MDApp):
         config.adddefaultsection('general')
         config.setdefault('general', 'id', create_uuid())
         config.adddefaultsection('interface')
-        config.setdefault('interface', 'theme', 'Light')  # TODO: Если темная тема включена, то вкладки неправильно работают
+        config.setdefault('interface', 'theme',
+                          'Light')  # TODO: Если темная тема включена, то вкладки неправильно работают
         config.adddefaultsection('app')
         config.setdefault('app', 'fps', 0)
 
@@ -306,7 +302,7 @@ class MyCollegeApp(MDApp):
     def on_resume(self):
         self.change_data(None, None, None, self.selected_day)
 
-    def hook_keyboard(self, window, key, *largs):
+    def hook_keyboard(self, key):
         if key == 27:
             self.dialog = MDDialog(
                 text='Выйти из приложения?',
@@ -315,13 +311,13 @@ class MyCollegeApp(MDApp):
                         text='Нет',
                         text_color=self.theme_cls.primary_color,
                         font_size='18dp',
-                        on_press=lambda x:self.dismiss_dialog()
+                        on_press=lambda x: self.dismiss_dialog()
                     ),
                     MDFlatButton(
                         text='Да!',
                         text_color=self.theme_cls.primary_color,
                         font_size='18dp',
-                        on_press=lambda x:self.close_app()
+                        on_press=lambda x: self.close_app()
                     )
                 ]
             )
@@ -379,12 +375,12 @@ class MyCollegeApp(MDApp):
                 critical(f'ошибка {e}')
                 snackbar.open()
 
-    def check_request(self): # TODO: remove
-        if not isfile('dfs.json'): # TODO: rewrite
+    def check_request(self):  # TODO: remove
+        if not isfile('dfs.json'):  # TODO: rewrite
             self.get_dataframe()
             return
         uuid = self.get_uuid()
-        mod_time = getmtime('dfs.json') # TODO: change. It's not always work, because file can be changed manually
+        mod_time = getmtime('dfs.json')  # TODO: change. It's not always work, because file can be changed manually
         data = {'id': str(uuid), 'time': mod_time}
         body = dumps(data)
         wt = self.root.ids['timetable'].ids['wt']
@@ -395,7 +391,7 @@ class MyCollegeApp(MDApp):
                 return  # тестовая функция
         current_tab = self.root.ids['timetable'].ids[self.selected_day]
 
-        #TODO: separate
+        # TODO: separate
         spiner = FloatLayout()
         spiner.add_widget(MDSpinner(pos_hint={'center_x': 0.5, 'center_y': 0.5}, size_hint=[None, None]))
         current_tab.add_widget(spiner)
@@ -409,7 +405,7 @@ class MyCollegeApp(MDApp):
                    on_error=self.load_and_show,
                    on_failure=self.actuality_check)
 
-    def actuality_check(self, req, res):  # TODO: remove
+    def actuality_check(self, res):  # TODO: remove
         if res != {}:
             actual = res['result']
         else:
@@ -419,7 +415,7 @@ class MyCollegeApp(MDApp):
             self.get_dataframe()
         else:
             try:
-                self.load_and_show(req, res, actual=True)
+                self.load_and_show(actual=True)
             except Exception as e:
                 snackbar = NotActualSnackBar(text="Возникла критическая ошибка", bg_color=(1, 0, 0, 1))
                 critical(f'ошибка {e}')
@@ -439,24 +435,20 @@ class MyCollegeApp(MDApp):
                    on_redirect=self.load_and_show,
                    on_success=self.save_and_show)
 
-    def load_and_show(self, req, res, actual=False, *args):
+    def load_and_show(self, actual=False):
         if not actual:
             snackbar = NotActualSnackBar(text=f"Загружено расписание от {self.get_file_time()}",
                                          bg_color=(0.4, 0.4, 0.4, 1))
             snackbar.open()
-        # else:
-        #     snackbar = NotActualSnackBar(text=f"Расписание актуально, скачивание не нужно",
-        #                                  bg_color=self.parse_rgb(80, 200, 120, 1))
-        #     snackbar.open()
         if not isfile('dfs.json'):
             return
         with open('dfs.json', 'r') as jsn:
             jsn_text = jsn.read()
             self.save_in_var(loads(jsn_text))
 
-    def save_and_show(self, req, res, *args): # TODO: remove
+    def save_and_show(self, req, res):  # TODO: remove
         jsn_text = dumps(res)
-        if req.resp_status == 200: # TODO: remove
+        if req.resp_status == 200:  # TODO: remove
             with open('dfs.json', 'w') as jsn:
                 jsn.write(jsn_text)
                 jsn.close()
@@ -529,11 +521,11 @@ class MyCollegeApp(MDApp):
             current_tab.remove_widget(current_tab.children[0])
         current_tab.add_widget(tab_data)
 
-    def add_backbutton(self, *args):  # TODO: why is it a function???
+    def add_backbutton(self):  # TODO: why is it a function???
         settings_tb = self.root.ids['settings'].ids['settings_tb']
         settings_tb.left_action_items = [['arrow-left', self.back_to_start]]
 
-    def back_to_start(self, *args):  # TODO: why is it a function???
+    def back_to_start(self):  # TODO: why is it a function???
         settings_sm = self.root.ids['settings'].ids['settings_sm']
         settings_tb = self.root.ids['settings'].ids['settings_tb']
         settings_sm.current = 'main'
