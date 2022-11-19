@@ -22,8 +22,8 @@ from kivymd.uix.button import MDIconButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
 
 if platform == 'android':
-    from kvdroid import navbar_color, statusbar_color
-    from kvdroid import toast as native_toast
+    from kvdroid.tools import navbar_color, change_statusbar_color
+    from kvdroid.tools import toast as native_toast
 from logging import critical
 from json import dumps, loads
 from os.path import getmtime, isfile
@@ -283,7 +283,7 @@ class MyCollegeApp(MDApp):
             else:
                 statusbar_hex = get_hex_from_color(self.theme_cls.primary_dark)
                 navbar_hex = get_hex_from_color(self.theme_cls.bg_dark)
-            statusbar_color(statusbar_hex[:7], 'white')
+            change_statusbar_color(statusbar_hex[:7], 'white')
             navbar_color(navbar_hex[:7])
 
         from kivy.base import EventLoop
