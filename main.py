@@ -252,6 +252,9 @@ class MyCollegeApp(MDApp):
         config.setdefault('app', 'fps', 0)
 
     def on_start(self):
+        from kivy.base import EventLoop
+        EventLoop.window.bind(on_keyboard=self.hook_keyboard)
+
         config = self.config
         theme = config.get('interface', 'theme').capitalize()
         fps = config.getint('app', 'fps')
@@ -269,14 +272,11 @@ class MyCollegeApp(MDApp):
             change_statusbar_color(statusbar_hex[:7], 'white')
             navbar_color(navbar_hex[:7])
 
-        from kivy.base import EventLoop
-        EventLoop.window.bind(on_keyboard=self.hook_keyboard)
-
-        wt = self.root.ids['timetable'].ids['wt']
-        wt.switch_tab(self.rus_days[self.weekday])
+        weekdays_tab = self.root.ids['timetable'].ids['wt']
+        weekdays_tab.switch_tab(self.rus_days[self.weekday])
         self.change_data(None, None, None, self.rus_days[self.weekday])  # Тестовая функция
-        sm = self.root.ids['settings'].ids['settings_sm']
-        sm.current = 'main'
+        settings_screen_manager = self.root.ids['settings'].ids['settings_sm']
+        settings_screen_manager.current = 'main'
 
     def on_pause(self):
         self.config.write()
